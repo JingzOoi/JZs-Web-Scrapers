@@ -27,11 +27,11 @@ os.makedirs(folderName, exist_ok = True)
 print('Folder with name ' + folderName + ' created.')
 i = 0
 
-driver = webdriver.Firefox()
-driver.get(url)
 whitelist = ['permalink-in-reply-tos', 'permalink-tweet']
 
 try:
+    driver = webdriver.Firefox()
+    driver.get(url)
     for class_ in whitelist:
         for post in driver.find_elements_by_class_name(class_):
             for container in post.find_elements_by_class_name('AdaptiveMediaOuterContainer'):
