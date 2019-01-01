@@ -14,7 +14,7 @@ import requests, os, datetime, pyperclip
 
 # takes in url directly from clipboard
 url = pyperclip.paste()
-
+sess = requests.Session()
 # validates url
 try:
     # checks if url is splitable (i.e. not plain text)
@@ -52,7 +52,6 @@ try:
             for container in post.select('.AdaptiveMediaOuterContainer'):
                 for images in container.find_all('img'):
                     imageURL = images.get('src')
-                    sess = requests.Session()
                     re = sess.get(imageURL + ':orig')
                     re.raise_for_status()
                     i += 1

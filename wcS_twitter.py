@@ -14,6 +14,7 @@ import requests, os, pyperclip, datetime
 
 # takes in url directly from clipboard
 url = pyperclip.paste()
+sess = requests.Session()
 
 # validates url
 try:
@@ -27,7 +28,7 @@ try:
 
     # checks if the link is splittable into 6 parts, as per a valid post link
     elif len(validation) != 6: 
-        print('The URL provided is a Twitter link, but it is not a post link.')
+        print('The URL provided is a Twitter link, but not a post link.')
         exit()
 except:
     print('URL entered: {} \nCopy the correct link into the clipboard and try again.\n'.format(url))
@@ -52,7 +53,6 @@ try:
             for container in post.find_elements_by_class_name('AdaptiveMediaOuterContainer'):
                 for images in container.find_elements_by_tag_name('img'):
                     imageURL = images.get_attribute('src')
-                    sess = requests.Session()
                     re = sess.get(imageURL + ':orig')
                     re.raise_for_status()
                     i += 1
