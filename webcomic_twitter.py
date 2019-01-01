@@ -40,6 +40,8 @@ print('Folder with name ' + folderName + ' created.')
 
 # count
 i = 0
+
+# limits the type of division from which the images are taken
 whitelist = ['permalink-in-reply-tos', 'permalink-tweet']
 
 try:
@@ -51,16 +53,19 @@ try:
         for post in soup.find_all('div', class_ = wl):
             for container in post.select('.AdaptiveMediaOuterContainer'):
                 for images in container.find_all('img'):
+
+                    # gets the image link, tries to get the original image file (:orig) instead of the shrinked version shown
                     imageURL = images.get('src')
                     re = sess.get(imageURL + ':orig')
                     re.raise_for_status()
                     i += 1
 
+                    # attaches original file extension to new image name
                     imageName = os.path.basename(imageURL)
                     imageN = imageName.split('.')[1]
                     imageFileName = str(i) + "." + imageN
 
-                    # downloads image files
+                    # downloads image files to created folder
                     print('Downloading image ' + imageName + " as " + imageFileName + "...")
                     with open(os.path.join(folderName, imageFileName), 'wb') as imageFile:   
                         imageFile.write(re.content)
@@ -70,7 +75,7 @@ except:
     print('An error has occured. Check your connection and try again. \nIf this error persists, contact the developer to report this error.')
     exit()
 
-print('Download tasks complete.\n')
+print('Download tasks complete. Creating metadata file.\n')
 
 # creates metadata.txt in folder
 f = open(folderName + '\\metadata.txt', 'w+')
