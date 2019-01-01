@@ -2,7 +2,7 @@
 # wcS_Twitter.py: Downloads image files off Twitter posts. 
 #                 Supports images from 'main' post and 'reply' posts.
 # Usage: [1] Copy the Twitter post link into the clipboard.
-#        [2] Run the script. [In powershell (Windows) / terminal (Mac): python webcomic_twitter.py]
+#        [2] Run the script. [In powershell (Windows) / terminal (Mac): python webcomic_twitter.py <url>]
 #        [3] The images will be downloaded in the subfolder .\temp\<Twitter handle>\<post ID>.
 #        [*] A metadata.txt file will be created to record the post and images info.
 # Note: Now downloads :orig images as of 1 Jan 2019. 
@@ -10,10 +10,10 @@
 # Additional modules required: requests, bs4, pyperclip
 
 from bs4 import BeautifulSoup
-import requests, os, datetime, pyperclip
+import requests, os, datetime, sys
 
 # takes in url directly from clipboard
-url = pyperclip.paste()
+url = sys.argv[1]
 sess = requests.Session()
 # validates url
 try:
