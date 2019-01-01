@@ -11,22 +11,36 @@
 from selenium import webdriver
 import requests, os, pyperclip, datetime
 
+# takes in url directly from clipboard
 url = pyperclip.paste()
 
+# validates url
 try:
-    url.split('/')
+    # checks if url is splitable (i.e. not plain text)
+    validation = url.split('/')
+
+    # checks if url is a twitter link
     if 'https://twitter.com' not in url:
         print('URL is not a Twitter link.')
+        exit()
+
+    # checks if the link is splittable into 6 parts, as per a valid post link
+    elif len(validation) != 6: 
+        print('The URL provided is a Twitter link, but it is not a post link.')
         exit()
 except:
     print('URL entered: {} \nCopy the correct link into the clipboard and try again.\n'.format(url))
     exit()
 
+# creates folder based on Twitter handle and post ID in URL. Ignores if exists.
 folderName = 'temp\\@{}\\{}'.format(url.split('/')[3], url.split('/')[-1])
 os.makedirs(folderName, exist_ok = True)
 print('Folder with name ' + folderName + ' created.')
+
+# count
 i = 0
 
+# classes to be included in search
 whitelist = ['permalink-in-reply-tos', 'permalink-tweet']
 
 try:
@@ -40,13 +54,15 @@ try:
                     re = requests.get(imageURL + ':orig')
                     re.raise_for_status()
                     i += 1
-
+                    
+                    # defines image file names
                     imageName = os.path.basename(imageURL)
                     imageN = imageName.split('.')[1]
                     imageFileName = str(i) + "." + imageN
-                    print('Downloading image ' + imageName + " as " + imageFileName + "...")
-                    imageFile = open(os.path.join(folderName, imageFileName), 'wb')
 
+                    # downloads image files
+                    print('Downloading image ' + imageName + " as " + imageFileName + "...")
+                    imageFile = open(os.path.join(folderName, imageFileName), 'wb')      
                     for chunk in re.iter_content(100000):
                         imageFile.write(chunk)
                     imageFile.close()
@@ -57,9 +73,12 @@ except:
 
 print('Download tasks complete.\n')
 
+# creates metadata.txt in folder
 f = open(folderName + '\\metadata.txt', 'w+')
 f.write('Link: ' + url + '\n')
 f.write('Twitter handle: @' + url.split('/')[3] + '\n')
-f.write(str(i) + ' images grabbed on datetime: ' + str(datetime.datetime.now()) + '\n')
+f.write('A total of {} images grabbed on datetime: {}\n'.format(str(i), str(datetime.datetime.now())))
+
 print('Metadata file created. All operations complete.\n')
+
 driver.close()
