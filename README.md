@@ -8,7 +8,7 @@ Q: What does it do?
 A: it downloads image files from Twitter posts.
 
 Q: Why <i>webcomic</i>_twitter?  
-A: That's what I was intending to use it for.
+A: That's what I was intending to use it for. With permission of course.
 
 Q: Why should I use this instead of clicking the images and saving them individually using "Save Image As..."?  
 A: Because I'm a lazy bum and don't want to do that. You do you.
