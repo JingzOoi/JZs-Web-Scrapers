@@ -7,7 +7,7 @@
 #        [*] A metadata.txt file will be created to record the post and images info.
 # Note: Now downloads :orig images as of 1 Jan 2019. 
 
-# Additional modules required: requests, bs4, pyperclip
+# Additional modules required: requests, bs4
 
 from bs4 import BeautifulSoup
 import requests, os, datetime, sys
