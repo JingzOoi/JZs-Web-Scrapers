@@ -35,3 +35,6 @@ A: It's pretty useful for posts that have chapters and reply to each other, crea
   <li>A metadata.txt file will be created, recording the source link, the Twitter handle, number of images downloaded, and the date and time the operation is performed.</li>
   <li>If the (twitter_handle) folder already exists, the new (post_ID) folder will be created under said folder.</li>
 </ul>
+
+<h1>Notes</h1>
+Be gentle when dissing my stuff, self learning can only do so much until you decide to drop me a message ;)
