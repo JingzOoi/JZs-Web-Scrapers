@@ -25,7 +25,7 @@ A: It's pretty useful for posts that have chapters and reply to each other, crea
 <h2>How to use</h2>
 <ul>
   <li>Copy the Twitter post link into the clipboard.</li>
-  <li>Run the script. [In powershell (Windows) / terminal (Mac): python webcomic_twitter.py <url>]</li>
+  <li>Run the script. [In powershell (Windows) / terminal (Mac): python webcomic_twitter.py (url)]</li>
 </ul>
 
 <h2>What you should expect will happen</h2>
