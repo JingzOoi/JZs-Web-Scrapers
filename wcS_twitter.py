@@ -15,11 +15,11 @@ url = pyperclip.paste()
 
 try:
     url.split('/')
-    if 'https://' not in url or 'twitter' not in url:
+    if 'https://twitter.com' not in url:
         print('URL is not a Twitter link.')
         exit()
 except:
-    print('URL entered: {} \nCopy the correct link into the clipboard and try again.\nExiting.\n'.format(url))
+    print('URL entered: {} \nCopy the correct link into the clipboard and try again.\n'.format(url))
     exit()
 
 folderName = 'temp\\@{}\\{}'.format(url.split('/')[3], url.split('/')[-1])
