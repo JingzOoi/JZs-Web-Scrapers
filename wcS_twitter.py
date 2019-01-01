@@ -3,10 +3,10 @@
 #                 Supports images from 'main' post and 'reply' posts.
 # Modules required: selenium, geckodriver (Firefox), requests, pyperclip
 # Usage: [1] Copy the Twitter post link into the clipboard.
-#        [2] Run the script.
+#        [2] Run the script. [In powershell (Windows) / terminal (Mac): python wcS_twitter.py)
 #        [3] The images will be downloaded in the subfolder .\temp\<Twitter handle>\<post ID>.
 #        [*] A metadata.txt file will be created to record the post and images info.
-# Note: As of 1 Jan 2019, the script still doesn't download the :orig versions of the images. Scanlators, don't kill me.
+# Note: Now downloads :orig images as of 1 Jan 2019. 
 
 from selenium import webdriver
 import requests, os, pyperclip, datetime
