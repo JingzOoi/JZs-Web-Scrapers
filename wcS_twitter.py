@@ -1,12 +1,13 @@
 #! python3
 # wcS_Twitter.py: Downloads image files off Twitter posts. 
 #                 Supports images from 'main' post and 'reply' posts.
-# Modules required: selenium, geckodriver (Firefox), requests, pyperclip
 # Usage: [1] Copy the Twitter post link into the clipboard.
 #        [2] Run the script. [In powershell (Windows) / terminal (Mac): python wcS_twitter.py)
 #        [3] The images will be downloaded in the subfolder .\temp\<Twitter handle>\<post ID>.
 #        [*] A metadata.txt file will be created to record the post and images info.
 # Note: Now downloads :orig images as of 1 Jan 2019. 
+
+# Modules required: selenium, geckodriver (Firefox), requests, pyperclip
 
 from selenium import webdriver
 import requests, os, pyperclip, datetime
@@ -51,7 +52,8 @@ try:
             for container in post.find_elements_by_class_name('AdaptiveMediaOuterContainer'):
                 for images in container.find_elements_by_tag_name('img'):
                     imageURL = images.get_attribute('src')
-                    re = requests.get(imageURL + ':orig')
+                    sess = requests.Session()
+                    re = sess.get(imageURL + ':orig')
                     re.raise_for_status()
                     i += 1
                     
@@ -62,9 +64,8 @@ try:
 
                     # downloads image files
                     print('Downloading image ' + imageName + " as " + imageFileName + "...")
-                    imageFile = open(os.path.join(folderName, imageFileName), 'wb')      
-                    for chunk in re.iter_content(100000):
-                        imageFile.write(chunk)
+                    with open(os.path.join(folderName, imageFileName), 'wb') as imageFile:   
+                        imageFile.write(re.content)
                     imageFile.close()
                     print('Image ' + imageName + ' downloaded.')
 except:
@@ -77,7 +78,7 @@ print('Download tasks complete.\n')
 f = open(folderName + '\\metadata.txt', 'w+')
 f.write('Link: ' + url + '\n')
 f.write('Twitter handle: @' + url.split('/')[3] + '\n')
-f.write('A total of {} images grabbed on datetime: {}\n'.format(str(i), str(datetime.datetime.now())))
+f.write('A total of {} image(s) grabbed on datetime: {}\n'.format(str(i), str(datetime.datetime.now())))
 
 print('Metadata file created. All operations complete.\n')
 
