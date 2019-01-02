@@ -1,7 +1,7 @@
 # JZs-Web-Scrapers
 JZ's Web Scrapers. More like 'scrapers that are useful for my lazy ass'.
 
-1. <a href = '#webcomic_twitter.py'>webcomic_twitter.py</a>
+1. <a href = '#tag-webcomic_twitter.py'>webcomic_twitter.py</a>
 
 # webcomic_twitter.py
 Q: What does it do?  
@@ -20,6 +20,7 @@ A: It's pretty useful for posts that have chapters and reply to each other, crea
 <ul>
   <li><a href = 'https://www.crummy.com/software/BeautifulSoup'>bs4</a></li>
   <li><a href = 'http://docs.python-requests.org/en/master/'>requests</a></li>
+  <li>scraperFunctions.py - it's right there.</li>
 </ul>
 
 <h2>How to use</h2>
