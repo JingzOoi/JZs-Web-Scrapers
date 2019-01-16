@@ -1,33 +1,27 @@
 #! python3
 # eduComic.py: Downloads educational comics from the website nhentai.net.
 # Usage: [1] Run the script. (python eduComic.py)
-#        [2] When prompted, enter the gallery URL. Make sure it ends with /.
+#        [2] When prompted, enter the magical 6-digit number.
 # Additional modules: requests, bs4
 
 import requests, os, datetime
 from bs4 import BeautifulSoup
 
-url = input('Input your educational gallery URL here: ')
+number = input('Enter the magical 6-digit number: ')
 sess = requests.Session()
 
 try:
     # checks if url is splitable (i.e. not plain text)
-    validation = url.split('/')
-
-    # checks if url is an nhentai link
-    if 'nhentai.net' not in url:
-        print('URL is not an {} link.'.format('nhentai'))
+    if len(number) != 6:
+        print('The input was not the magical number.')
         exit()
+    else:
+        url = 'https://nhentai.net/g/' + number
 
-    # checks if the link is splittable into 6 parts, as per a valid gallery link
-    elif len(validation) != 6: 
-        print('The URL provided is a {} link, but not a post link.'.format('nhentai'))
-        exit()
-
+    print('Getting gallery information...')
     page = sess.get(url)
     page.raise_for_status()
-
-
+    
     soup = BeautifulSoup(page.text, 'lxml')
 
     for tag in soup.find_all('a', class_ = 'tag'):
@@ -35,7 +29,7 @@ try:
             authorName = tag.get('href').split('/')[-2]
 
 
-    folderName = 'temp\\eduComic\\{}\\{}'.format(authorName, url.split('/')[-2])
+    folderName = 'temp\\eduComic\\{}\\{}'.format(authorName, number)
     os.makedirs(folderName, exist_ok = True)
     print('Folder with name ' + folderName + ' created. \nStarting download operations.')
 
@@ -57,7 +51,6 @@ try:
             imageFile.write(re.content)
         imageFile.close()
         print('\b'*len(load), end='', flush=True)
-        #print('[{}/{}] Image '.format(str(i).rjust(len(str(galleryLen))), galleryLen) + imageName + ' downloaded.')
 
     print('\nDownload operations complete. {} images has been downloaded. \nCreating metadata file.\n'.format(str(i)))
 
@@ -68,5 +61,5 @@ try:
 
     print('All operations complete.\n')
 except:
-    print('An error has occured. Please check your network connection and try again.\n')
+    print('Please check your network connection and try again.')
     exit()
