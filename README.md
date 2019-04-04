@@ -12,7 +12,7 @@ JZ's Web Scrapers. More like 'scrapers that are useful for my lazy ass'.
 <h3>Because some files might need this, and I'm not smart enough to use other ones.</h3>
 Not a scraper, but other scrapers might use this.
 <br>
-<h3>Usage:</h3><br>
+<h3>Usage:</h3>
 
 <pre>
 from loadingBar import loadingBar
@@ -32,8 +32,11 @@ Parameters:
 
 <h2>eduComic.py</h2>
 <h3>Downloads albums off the NSFW website nhentai.net.</h3>
+<h3>Additional modules:</h3>
+<ul>
+    <li><a href="https://html.python-requests.org/">requests-html</a></li>
+</ul>
 <h3>Usage:</h3>
-<br>
 <pre>
 import eduComic
 url = 'https://nhentai.net/g/{6-digit-number}/'
@@ -48,6 +51,25 @@ url = '{6-digit-number}'
 album = educomic.Album(url)
 album.download()
 </pre>
-Will be saved to \temp\eduComic\{6-digit-number} on default.
+Note: Will be saved to \temp\eduComic\{6-digit-number} on default.
+
+Also can be done:
+<pre>
+import eduComic
+url = '{6-digit-number}'
+album = educomic.Album(url)
+print(album.title)
+</pre>
+
+Attributes of class Album:
+<ul>
+    <li>.url (str)</li>
+    <li>.magicNumber (str)</li>
+    <li>.page (Response)</li>
+    <li>.title (str)</li>
+    <li>.tags (str)</li>
+    <li>.album (list)</li>
+    <li>.pageCount (int)</li>
+</ul>
 
 <hr>
