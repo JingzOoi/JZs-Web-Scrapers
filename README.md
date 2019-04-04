@@ -32,7 +32,7 @@ Parameters:
 
 <h2>eduComic.py</h2>
 <h3>Downloads albums off the NSFW website nhentai.net.</h3>
-Usage:
+<h3>Usage:</h3>
 <br>
 <pre>
 import eduComic
