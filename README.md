@@ -12,7 +12,7 @@ JZ's Web Scrapers. More like 'scrapers that are useful for my lazy ass'.
 <h3>Because some files might need this, and I'm not smart enough to use other ones.</h3>
 Not a scraper, but other scrapers might use this.
 <br>
-Usage:
+<h3>Usage:</h3><br>
 
 <pre>
 from loadingBar import loadingBar
@@ -40,7 +40,6 @@ url = 'https://nhentai.net/g/{6-digit-number}/'
 album = educomic.Album(url)
 album.download()
 </pre>
-<br>
 or:
 <br>
 <pre>
