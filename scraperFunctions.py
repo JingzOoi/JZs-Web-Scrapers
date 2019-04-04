@@ -19,7 +19,7 @@ def validateURL(url, website, length):
 
 # creates folder based on Twitter handle and post ID in URL. Ignores if exists.
 def createFolderPath(folder1, folder2):
-    folderName = 'temp\\@{}\\{}'.format(folder1, folder2)
+    folderName = 'temp\\{}\\{}'.format(folder1, folder2)
     os.makedirs(folderName, exist_ok = True)
     print('Folder with name ' + folderName + ' created.')
     return folderName
@@ -27,9 +27,7 @@ def createFolderPath(folder1, folder2):
 # attaches original file extension to new image name
 def imageRename(imageURL, i):
     imageOName = os.path.basename(imageURL)
-    imageExtension = imageOName.split('.')[-1]
-    imageNName = str(i) + "." + imageExtension
-    return imageNName, imageOName
+    return imageOName
 
 
 # downloads image files to created folder
@@ -44,5 +42,8 @@ def imageDownload(re, folderName, imageOName, imageNName):
 def createMetadata(folderName, authorName, url, i):
     f = open(folderName + '\\metadata.txt', 'w+')
     f.write('Link: ' + url + '\n')
-    f.write('Twitter handle: @' + authorName + '\n')
+    if 'twitter.com' in url:
+        f.write('Twitter handle: @' + authorName + '\n')
+    else:
+        f.write('Created by: ' + authorName + '\n')
     f.write('A total of {} image(s) grabbed on datetime: {}\n'.format(str(i), str(datetime.datetime.now())))
