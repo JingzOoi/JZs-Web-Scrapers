@@ -1,65 +1,75 @@
-#! python3
-# eduComic.py: Downloads educational comics from the website nhentai.net.
-# Usage: [1] Run the script. (python eduComic.py)
-#        [2] When prompted, enter the magical 6-digit number.
-# Additional modules: requests, bs4
+from requests_html import HTMLSession
+import os, loadingBar, timeit
 
-import requests, os, datetime
-from bs4 import BeautifulSoup
+sess = HTMLSession()
 
-number = input('Enter the magical 6-digit number: ')
-sess = requests.Session()
+class Album:
+    def __init__(self, url:str):
 
-try:
-    # checks if url is splitable (i.e. not plain text)
-    if len(number) != 6:
-        print('The input was not the magical number.')
-        exit()
-    else:
-        url = 'https://nhentai.net/g/' + number
+        if len(url) <= 6:
+            self.url = f'https://nhentai.net/g/{url}/'
+        elif len(url) == 29 and 'nhentai' in url:
+            self.url = url
+        else:
+            print("Invalid link.")
+            exit()
 
-    print('Getting gallery information...')
-    page = sess.get(url)
-    page.raise_for_status()
-    
-    soup = BeautifulSoup(page.text, 'lxml')
+        self.magicNumber = self.url.split('/')[-2]
+        self.page = sess.get(self.url)
+        self.title = self.searchMeta(self.page)["title"]
+        self.tags = self.searchMeta(self.page)["tags"]
+        self.album = [f'https://nhentai.net{thumb.attrs["href"]}' for thumb in self.page.html.find('.gallerythumb')]
+        self.pageCount = len(self.album)
 
-    for tag in soup.find_all('a', class_ = 'tag'):
-        if '/artist/' in tag.get('href'):
-            authorName = tag.get('href').split('/')[-2]
+    def searchMeta(self, page):
 
+        metaDict = {}
 
-    folderName = 'temp\\eduComic\\{}\\{}'.format(authorName, number)
-    os.makedirs(folderName, exist_ok = True)
-    print('Folder with name ' + folderName + ' created. \nStarting download operations.')
+        for meta in page.html.find('meta'):
+            try:
+                if meta.attrs["name"]=="twitter:title":
+                    metaDict["title"] = meta.attrs["content"]
 
-    i = 0
-    galleryLen = len(soup.select('.gallerythumb'))
-    for thumb in soup.select('.gallerythumb'):
-        i += 1
-        pageURL = 'https://nhentai.net' + thumb.get('href')
-        pagePage = sess.get(pageURL)
-        pageSoup = BeautifulSoup(pagePage.text, 'lxml')
-        imageURL = pageSoup.select('img')[1].get('src')
+                if meta.attrs["name"]=="twitter:description":
+                    metaDict["tags"] = meta.attrs["content"]
+
+            except KeyError:
+                continue
+
+        return metaDict
+
+    def download(self):
+        dt = timeit.default_timer()
+        destinationFolder = f'temp\\eduComic\\{self.magicNumber}'
+        print(f'\nCreating folder {destinationFolder}.')
+
+        os.makedirs(destinationFolder, exist_ok=True)
+        print('Starting download operations.')
+
+        size = 0
+
+        for pageNum, image in enumerate(self.album, start=1):
+
+            img = Image(image)
+
+            with open(os.path.join(destinationFolder, img.name), 'wb') as file:
+                file.write(img.image.content)
+            size += img.size
+            loadingBar.loadingBar(self.pageCount, pageNum, message=f'{pageNum}/{self.pageCount} {img.name}')
         
-        imageName = os.path.basename(imageURL)
-        load = '[{}/{}] Downloading image '.format(str(i).rjust(len(str(galleryLen))), galleryLen) + imageName + '...'
-        print(load, end='')
+        print('\nDownloading operations complete.\nCreating metadata file.')
         
-        re = sess.get(imageURL)
-        with open(os.path.join(folderName, imageName), 'wb') as imageFile:   
-            imageFile.write(re.content)
-        imageFile.close()
-        print('\b'*len(load), end='', flush=True)
+        with open(os.path.join(destinationFolder, 'metadata.txt'), 'w+') as metadata:
+            metadata.write(f'Album URL: {self.url}\nTitle: {self.title}\nNumber of pages: {self.pageCount}\nTags: {self.tags}\nTotal Size: {size:,} bytes')
 
-    print('\nDownload operations complete. {} images has been downloaded. \nCreating metadata file.\n'.format(str(i)))
+        time = timeit.default_timer()-dt
+        
+        print(f'\nAll operations complete. \nTotal time used: {round(time, 2):,} seconds\n')
 
-    f = open(folderName + '\\metadata.txt', 'w+')
-    f.write('Link: ' + url + '\n')
-    f.write('Created by: ' + authorName + '\n')
-    f.write('A total of {} image(s) grabbed on datetime: {}\n'.format(str(i), str(datetime.datetime.now())))
-
-    print('All operations complete.\n')
-except:
-    print('Please check your network connection and try again.')
-    exit()
+class Image:
+    def __init__(self,pageURL):
+        self.srcPage = sess.get(pageURL)
+        self.link = self.srcPage.html.find('#image-container', first=True).find('img', first=True).attrs["src"]
+        self.image = sess.get(self.link)
+        self.size = int(self.image.headers["Content-Length"])
+        self.name = os.path.basename(self.link)
