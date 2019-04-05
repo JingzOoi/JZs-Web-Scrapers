@@ -35,6 +35,7 @@ Parameters:
 <h3>Additional modules:</h3>
 <ul>
     <li><a href="https://html.python-requests.org/">requests-html</a></li>
+    <li>loadingBar.py (this repo)</li>
 </ul>
 <h3>Usage:</h3>
 <pre>
@@ -70,6 +71,7 @@ Attributes of class Album:
     <li>.tags (str)</li>
     <li>.album (list)</li>
     <li>.pageCount (int)</li>
+    <li>.favourites (int)</li>
 </ul>
 
 <hr>
