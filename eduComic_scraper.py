@@ -8,7 +8,7 @@ class Album:
 
         if len(url) <= 6:
             self.url = f'https://nhentai.net/g/{url}/'
-        elif len(url) == 29 and 'nhentai' in url:
+        elif 'nhentai' in url:
             self.url = url
         else:
             print("Invalid link.")
