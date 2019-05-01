@@ -27,8 +27,7 @@ The script will look for the number of images in the first 10 pages. When prompt
 
 <pre>x images found within the first 10 pages. Download? Y/N </pre>
 
-Sample output:<br>
-<img src="https://imgur.com/bd8kxyv" alt="sub to /r/Kaguya_sama"/><br>
+Then the download will start. 
 
 Currently supported sites:
 <ol>
