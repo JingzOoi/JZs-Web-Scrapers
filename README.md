@@ -1,11 +1,42 @@
 # JZs-Web-Scrapers
 JZ's Web Scrapers. More like 'scrapers that are useful for my lazy ass'.
 <ol>
+    <li><a href='#mainpy'>main.py</a></li>
     <li><a href='#loadingbarpy'>loadingBar.py</a></li>
-    <li><a href='#zerochanpy'>zeroChan.py</a></li>
-    <li><a href='#educomicpy'>eduComic.py</a></li>
+    <li><a href='#zerochan_scraperpy'>zeroChan_scraper.py</a></li>
+    <li><a href='#danbooru_scraperpy'>danbooru_scraper.py</a></li>
+    <li><a href='#educomic_scraperpy'>eduComic_scraper.py</a></li>
 </ol>
 
+
+<hr>
+
+<h2>main.py</h2>
+<h3>Just the assisting script that is the control panel for all the scrapers in here.</h3>
+You can use the other files as modules if you want to I guess.
+<h3>Usage:</h3>
+(In powerchell/cmd, in the directory of this repo)
+<pre>
+python main.py
+</pre>
+You'll be prompted for a URL. Give any album/collection URL that the scrapers support.
+
+<pre>URL here: </pre>
+
+The script will look for the number of images in the first 10 pages. When prompted, enter "y" to download the images in the first 10 pages (or less), "n" to exit, or an integer to tell it to download images up to that page number.
+
+<pre>x images found within the first 10 pages. Download? Y/N </pre>
+
+Sample output:<br>
+<img src="https://imgur.com/bd8kxyv" alt="sub to /r/Kaguya_sama"><br>
+
+Currently supported sites:
+<ol>
+    <li><a href="https://www.zerochan.net">ZeroChan</a></li>
+    <li><a href="https://www.danbooru.donmai.us">Danbooru</a></li>
+    <li><a href="https://www.nhentai.net">nHentai</a></li>
+    <li><a href="https://www.hentai.cafe">HentaiCafe</a></li>
+</ol>
 
 <hr>
 
@@ -31,7 +62,7 @@ Parameters:
 
 <hr>
 
-<h2>zeroChan.py</h2>
+<h2>zeroChan_scraper.py</h2>
 <h3>Download images from the image board <a href="https://www.zeroChan.net">ZeroChan</a>.</h3>
 
 <h3>Additional modules:</h3>
@@ -41,7 +72,7 @@ Parameters:
 </ul>
 <h3>Usage:</h3>
 <pre>
-    import zeroChan, loadingBar
+    import zeroChan_scraper, loadingBar
     url = f'https://www.zerochan.net/{tag}'
     collection = zeroChan.Collection(url)
     collection.download()
@@ -51,7 +82,7 @@ Note: the .download() function can take in an integer to indicate the number of 
 Also can be done:
 
 <pre>
-    import zeroChan
+    import zeroChan_scraper
     url = f'https://www.zerochan.net/{tag}'
     collection = zeroChan.Collection(url)
     print(collection.imageCount)
@@ -70,7 +101,31 @@ To do: add validation
 
 <hr>
 
-<h2>eduComic.py</h2>
+<h2>danbooru_scraper.py</h2>
+<h3>Download images from the image board <a href="https://danbooru.donmai.us">Danbooru</a>.</h3>
+
+<h3>Additional modules:</h3>
+<ul>
+    <li><a href="https://html.python-requests.org/">requests-html</a></li>
+    <li>loadingBar.py (this repo)</li>
+</ul>
+
+<h3>Usage:</h3>
+<pre>
+    import danbooru_scraper, loadingBar
+    url = f'https://danbooru.donmai.us/posts?tags={tag}'
+    collection = danbooru_scraper.Collection(url)
+    collection.download()
+</pre>
+
+<h3>Features:</h3>
+<b>Rating support</b><br> 
+Sorts images into folders based on their ratings.<br>
+Might be inaccurate because it's based on danbooru sorting.
+
+<hr>
+
+<h2>eduComic_scraper.py</h2>
 <h3>Downloads albums off the NSFW website nhentai.net.</h3>
 <h3>Additional modules:</h3>
 <ul>
@@ -79,7 +134,7 @@ To do: add validation
 </ul>
 <h3>Usage:</h3>
 <pre>
-    import eduComic, loadingBar
+    import eduComic_scraper, loadingBar
     url = 'https://nhentai.net/g/{6-digit-number}/'
     album = eduComic.Album(url)
     album.download()
@@ -87,7 +142,7 @@ To do: add validation
 or:
 <br>
 <pre>
-    import eduComic, loadingBar
+    import eduComic_scraper, loadingBar
     url = '{6-digit-number}'
     album = eduComic.Album(url)
     album.download()
@@ -96,7 +151,7 @@ Note: Will be saved to \temp\eduComic\{6-digit-number} on default.
 
 Also can be done:
 <pre>
-    import eduComic
+    import eduComic_scraper
     url = '{6-digit-number}'
     album = eduComic.Album(url)
     print(album.title)
