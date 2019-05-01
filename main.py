@@ -10,7 +10,7 @@ if 'zerochan' in url:
     album = zeroChan_scraper.Collection(url)
 elif 'danbooru' in url:
     album = danbooru_scraper.Collection(url)
-elif 'nhentai' in url or len(url) == 6:
+elif 'nhentai' in url or len(url) <= 6:
     album = eduComic_scraper.Album(url)
 elif 'hentai.cafe' in url:
     album = eduCafe_scraper.Album(url)
