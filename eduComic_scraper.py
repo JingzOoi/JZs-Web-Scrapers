@@ -1,5 +1,6 @@
 from requests_html import HTMLSession
 import os, loadingBar, timeit
+from time import sleep
 
 sess = HTMLSession()
 
@@ -57,6 +58,8 @@ class Album:
                 file.write(img.image.content)
             size += img.size
             loadingBar.loadingBar(self.imageCount, pageNum, message=f'{pageNum}/{self.imageCount} {img.name}')
+
+            sleep(img.time)
         
         print('\nDownloading operations complete.\nCreating metadata file.')
         
@@ -74,3 +77,4 @@ class Image:
         self.image = sess.get(self.link)
         self.size = int(self.image.headers["Content-Length"])
         self.name = os.path.basename(self.link)
+        self.time = self.image.elapsed.total_seconds()
