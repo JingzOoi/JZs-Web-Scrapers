@@ -15,7 +15,7 @@ elif 'nhentai' in url or len(url) == 6:
 elif 'hentai.cafe' in url:
     album = eduCafe_scraper.Album(url)
 
-ans = input(f'{album.imageCount} images found within the first 10 pages. Download? Y/N ').lower()
+ans = input(f'{album.imageCount} images found. Download? Y/N ').lower()
 if ans == 'y':
     album.download()
 elif ans == 'n':
