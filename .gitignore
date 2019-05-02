@@ -3,9 +3,3 @@ __pycache__/**
 temp/
 
 .vscode/
-
-temp.py
-
-testsite.py
-
-pixiv_scraper.py
