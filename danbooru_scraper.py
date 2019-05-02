@@ -10,6 +10,7 @@ class Collection:
         self.tag = pageURL.split('=')[-1]
         self.imageList = self.loop()
         self.imageCount = len(self.imageList)
+        self.name = self.tag
 
     def loop(self, pageNum:int = 10):
         
@@ -92,8 +93,8 @@ class Image:
             self.sourceID = f'@{self.source.split("/")[3]}_{self.source.split("/")[5]}'
             self.sourceSite = 'twitter'
         else:
-            self.sourceID = 'none'
-            self.sourceSite = 'other'
+            self.sourceID = '-----none'
+            self.sourceSite = 'other-----'
 
         self.imageType = os.path.splitext(self.link)[-1]
 

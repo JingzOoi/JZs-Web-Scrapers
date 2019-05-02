@@ -10,6 +10,7 @@ class Collection:
         self.imageList = self.loop()
         self.imageCount = len(self.imageList)
         self.tag = self.url.split('/')[-1].replace('+',' ')
+        self.name = self.tag
 
     def loop(self, pageNum:int = 10):
         

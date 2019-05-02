@@ -6,25 +6,47 @@ import danbooru_scraper
 url = input("URL here: ")
 print('Looking for images...')
 
-if 'zerochan' in url:
+if 'zerochan.net' in url:
     album = zeroChan_scraper.Collection(url)
-elif 'danbooru' in url:
+    page_specific = True
+elif 'danbooru.donmai.us' in url:
     album = danbooru_scraper.Collection(url)
-elif 'nhentai' in url or len(url) <= 6:
+    page_specific = True
+elif 'nhentai.net' in url:
     album = eduComic_scraper.Album(url)
+    page_specific = False
 elif 'hentai.cafe' in url:
     album = eduCafe_scraper.Album(url)
-
-ans = input(f'{album.imageCount} images found. Download? Y/N ').lower()
-if ans == 'y':
-    album.download()
-elif ans == 'n':
-    print("\nExit.\n")
-    exit()
+    page_specific = False
 else:
-    try:
-        a = int(ans)
-        album.download(a)
-    except:
-        print("An error has occured.")
-        exit()
+    print('Link Error. Site might not be supported.')
+    exit()
+
+if page_specific == True:
+    cli_page_specific = f'''
+{album.name} | {album.imageCount} images found.
+What do you want to do with it?
+[1] Download first 10 pages' worth of content
+[2] Download specific pages' worth of content
+[3] Exit
+
+'''
+else:
+    cli_page_specific = f'''
+{album.name} | {album.imageCount} images found.
+What do you want to do with it?
+[1] Download all
+[2] Exit
+
+    '''
+
+ans = int(input(cli_page_specific))
+
+if ans == 1:
+    album.download()
+elif ans == 2 and page_specific == True:
+    album.download(int(input('Page count: ')))
+else:
+    print('Exit.')
+    exit()
+

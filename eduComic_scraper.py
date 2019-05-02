@@ -22,6 +22,7 @@ class Album:
         self.album = [f'https://nhentai.net{thumb.attrs["href"]}' for thumb in self.page.html.find('.gallerythumb')]
         self.imageCount = len(self.album)
         self.favourites = int(self.page.html.find('.nobold', first=True).text.strip('()'))
+        self.name = self.title
 
     def searchMeta(self, page):
 

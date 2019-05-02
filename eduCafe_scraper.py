@@ -17,6 +17,7 @@ class Album():
         self.album = [link.find('a', first=True).attrs["href"] for link in sess.get(self.start).html.find('ul.dropdown li')]
         self.imageCount = len(self.album)
         self.tags = [link.text for link in self.page.html.find('.x-column.last p', first=True).find('a')]
+        self.name = self.title
 
     def download(self):
         dt = timeit.default_timer()
