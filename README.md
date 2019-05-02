@@ -19,15 +19,7 @@ You can use the other files as modules if you want to I guess.
 <pre>
 python main.py
 </pre>
-You'll be prompted for a URL. Give any album/collection URL that the scrapers support.
-
-<pre>URL here: </pre>
-
-The script will look for the number of images in the first 10 pages (for zerochan and danbooru). When prompted, enter "y" to download the images in the first 10 pages (or less), "n" to exit, or an integer to tell it to download images up to that page number.
-
-<pre>x images found within the first 10 pages. Download? Y/N </pre>
-
-Then the download will start. 
+You should be prompted for a URL. Give any album/collection URL that the scrapers support. A CLI will be shown, and you can follow the menu to download the images you want.
 
 Currently supported sites:
 <ol>
