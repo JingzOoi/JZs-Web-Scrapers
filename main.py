@@ -45,11 +45,13 @@ What do you want to do with it?
 > '''
 print(cli_page_specific, end='')
 ans = int(input())
-
-if ans == 1:
-    album.download()
-elif ans == 2 and page_specific == True:
-    album.download(int(input('Page count: ')))
-else:
-    print('Exit.')
-    exit()
+try:
+    if ans == 1:
+        album.download()
+    elif ans == 2 and page_specific == True:
+        album.download(int(input('Page count: ')))
+    else:
+        print('Exit.')
+        exit()
+except Exception as e:
+    exit(f'Script exit with message: {e}')
