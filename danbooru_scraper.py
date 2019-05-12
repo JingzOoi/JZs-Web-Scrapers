@@ -1,29 +1,35 @@
 from requests_html import HTMLSession
-import os, loadingBar, timeit
+import os
+from loadingBar import loadingBar
+import timeit
 from time import sleep
+import re
 
 sess = HTMLSession()
 
+
 class Collection:
-    def __init__(self, pageURL):
-        self.url = pageURL
-        self.tag = pageURL.split('=')[-1]
+    def __init__(self, url):
+        self.url = url
+        self.tag = self.url.split('=')[-1]
         self.imageList = self.loop()
         self.imageCount = len(self.imageList)
         self.name = self.tag
 
-    def loop(self, pageNum:int = 10):
-        
+    def loop(self, pageNum: int = 10):
+
         totalList = []
-        
+
         for i in range(1, 1+pageNum):
-            page = sess.get(f'https://danbooru.donmai.us/posts?page={i}&tags={self.tag}')
-            tempList = [post.find("a", first=True).attrs["href"] for post in page.html.find('article.post-preview')]
+            page = sess.get(
+                f'https://danbooru.donmai.us/posts?page={i}&tags={self.tag}')
+            tempList = [post.attrs["href"]
+                        for post in page.html.find('#posts-container article a')]
             totalList.extend(tempList)
 
         return totalList
 
-    def download(self, pageNum:int = 10):
+    def download(self, pageNum: int = 10):
         dt = timeit.default_timer()
 
         totalList = self.loop(pageNum)
@@ -36,31 +42,35 @@ class Collection:
         print('Starting download operations.')
 
         size = 0
-        typeCount = {
-            'safe': 0,
-            'questionable': 0,
-            'explicit' : 0
-        }
-        
+        typeCount = {}
+
         for num, image in enumerate(totalList, start=1):
             try:
                 img = Image(image)
                 targetFolder = os.path.join(destinationFolder, img.rating)
                 os.makedirs(targetFolder, exist_ok=True)
-                with open(os.path.join(targetFolder, f'[{num}] - {img.name}'), 'wb') as file:
-                    file.write(img.image.content)
+
+                img.download(num, targetFolder)
 
                 size += img.size
 
-                typeCount[f'{img.rating}'] += 1
+                if img.rating not in typeCount.keys():
+                    typeCount[f'{img.rating}'] = 1
+                else:
+                    typeCount[f'{img.rating}'] += 1
 
-                loadingBar.loadingBar(len(totalList), num, message=f'{num}/{len(totalList)} ..{img.name[:18]}')
+                loadingBar(len(totalList), num,
+                           message=f'{num}/{len(totalList)} {img.name}')
+
                 sleep(img.time)
+
+            except ConnectionError:
+                break
             except:
                 continue
 
         print('\nDownloading operations complete.\nCreating metadata file.')
-        
+
         with open(os.path.join(destinationFolder, 'metadata.txt'), 'w+') as metadata:
             metadata.write(f'''
             Album URL: {self.url}
@@ -71,33 +81,34 @@ class Collection:
             ''')
 
         time = timeit.default_timer()-dt
-        
-        print(f'\nAll operations complete. \nTotal time used: {round(time, 2):,} seconds\n')
 
+        print(
+            f'\nAll operations complete. \nTotal time used: {round(time, 2):,} seconds\n')
 
 
 class Image:
     def __init__(self, imagePageURL):
         self.url = f'https://danbooru.donmai.us{imagePageURL}'
         self.page = sess.get(self.url)
-        self.links = self.page.html.find('section#post-information ul li a')
-        self.link = self.links[-2].attrs["href"]
-        self.source = self.links[-1].attrs["href"]
-        self.rating = self.page.html.find('section#post-information ul li')[-4].text.split(':')[-1].strip().lower()
+
+        self.info = self.page.html.find('section#post-information', first=True)
+        self.info_text = self.info.text.split()
+
+        self.id = self.info_text[self.info_text.index('ID:')+1]
+        self.rating = self.info_text[self.info_text.index('Rating:')+1]
+        for a in self.info.links:
+            x = re.search('https://*.donmai.us/data/*.*', a)
+            if x:
+                self.link = x.group()
+            else:
+                continue
+
         self.image = sess.get(self.link)
         self.size = int(self.image.headers["Content-Length"])
-        if 'pixiv' in self.source and 'fanbox' not in self.source:
-            self.sourceID = self.source.split('=')[-1]
-            self.sourceSite = 'pixiv'
-        elif 'twitter' in self.source:
-            self.sourceID = f'@{self.source.split("/")[3]}_{self.source.split("/")[5]}'
-            self.sourceSite = 'twitter'
-        else:
-            self.sourceID = '-----none'
-            self.sourceSite = 'other-----'
-
         self.imageType = os.path.splitext(self.link)[-1]
-
-        self.name = f'{self.sourceSite}_{self.sourceID}{self.imageType}'
+        self.name = f'danbooru - {self.id}{self.imageType}'
         self.time = self.image.elapsed.total_seconds()
-        
+
+    def download(self, num: int = 0, destinationFolder='temp\\danbooru'):
+        with open(os.path.join(destinationFolder, f'[{num}] - {self.name}'), 'wb') as img:
+            img.write(self.image.content)
