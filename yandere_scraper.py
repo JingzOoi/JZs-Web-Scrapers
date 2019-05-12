@@ -52,7 +52,10 @@ class Collection:
 
                 size += img.size
 
-                typeCount[f'{img.rating}'] += 1
+                if img.rating not in typeCount.keys():
+                    typeCount[f'{img.rating}'] = 1
+                else:
+                    typeCount[f'{img.rating}'] += 1
 
                 loadingBar(len(totalList), num,
                            message=f'{num}/{len(totalList)} {img.name}')
