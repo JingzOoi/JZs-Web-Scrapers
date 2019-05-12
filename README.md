@@ -25,6 +25,7 @@ Currently supported sites:
 <ol>
     <li><a href="https://www.zerochan.net">ZeroChan</a></li>
     <li><a href="https://www.danbooru.donmai.us">Danbooru</a></li>
+    <li><a href="https://yande.re/post">Yande.re</a></li>
     <li><a href="https://www.nhentai.net">nHentai</a></li>
     <li><a href="https://www.hentai.cafe">HentaiCafe</a></li>
 </ol>
@@ -113,6 +114,19 @@ To do: add validation
 <b>Rating support</b><br> 
 Sorts images into folders based on their ratings.<br>
 Might be inaccurate because it's based on danbooru sorting.
+
+<hr>
+
+<h2>yandere_scraper.py</h2>
+<h3>Download images from the image board <a href="https://yande.re/post">Yande.re</a>.</h3>
+
+<h3>Additional modules:</h3>
+<ul>
+    <li><a href="https://html.python-requests.org/">requests-html</a></li>
+    <li>loadingBar.py (this repo)</li>
+</ul>
+
+(Almost the same as the danbooru scraper)
 
 <hr>
 
