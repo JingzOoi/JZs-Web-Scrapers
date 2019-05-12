@@ -97,11 +97,14 @@ class Image:
         self.id = self.info_text[self.info_text.index('ID:')+1]
         self.rating = self.info_text[self.info_text.index('Rating:')+1]
         for a in self.info.links:
-            x = re.search('https://*.donmai.us/data/*.*', a)
+            r = re.compile(
+                r'https://(danbooru|raikou2)\.donmai\.us/([A-Za-z0-9_/+]+)\.([a-z]{3,4})')
+            x = re.search(r, a)
             if x:
                 self.link = x.group()
+                break
             else:
-                continue
+                raise Exception(f'Matching link not found in {self.url}')
 
         self.image = sess.get(self.link)
         self.size = int(self.image.headers["Content-Length"])
