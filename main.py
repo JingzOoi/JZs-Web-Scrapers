@@ -5,9 +5,10 @@ import danbooru_scraper
 import yandere_scraper
 
 url = input("URL here: ")
-print('Looking for images...')
 
-if 'zerochan.net' in url:
+if url is None:
+    exit('Invalid Link')
+elif 'zerochan.net' in url:
     album = zeroChan_scraper.Collection(url)
     page_specific = True
 elif 'danbooru.donmai.us' in url:
@@ -26,9 +27,12 @@ else:
     print('Link Error. Site might not be supported.')
     exit()
 
+if album.valid == False:
+    exit('Invalid Tag')
+
 if page_specific == True:
     cli_page_specific = f'''
-{album.name} | {album.imageCount} images found.
+{album.name}
 What do you want to do with it?
 [1] Download first 10 pages' worth of content
 [2] Download specific pages' worth of content

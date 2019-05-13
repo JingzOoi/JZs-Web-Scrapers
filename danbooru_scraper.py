@@ -5,6 +5,7 @@ import timeit
 from time import sleep
 import re
 
+
 sess = HTMLSession()
 
 
@@ -12,9 +13,17 @@ class Collection:
     def __init__(self, url):
         self.url = url
         self.tag = self.url.split('=')[-1]
-        self.imageList = self.loop()
-        self.imageCount = len(self.imageList)
         self.name = self.tag
+        self.valid = self.verifyTag()
+
+    def verifyTag(self):
+        page = sess.get(self.url)
+        p = page.html.find('#posts-container p', first=True)
+        if p is None:
+            return True
+        elif 'Nobody here but us chickens!' in p.text:
+            return False
+        return True
 
     def loop(self, pageNum: int = 10):
 
