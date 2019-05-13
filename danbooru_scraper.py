@@ -4,6 +4,7 @@ from loadingBar import loadingBar
 import timeit
 from time import sleep
 import re
+import PySimpleGUI as sg
 
 
 sess = HTMLSession()
@@ -42,43 +43,50 @@ class Collection:
         dt = timeit.default_timer()
 
         totalList = self.loop(pageNum)
-        print(f'\n{len(totalList)} images found.')
+        #print(f'\n{len(totalList)} images found.')
 
         destinationFolder = f'temp\\danbooru\\{self.tag}'
-        print(f'\nCreating folder {destinationFolder}.')
+        #print(f'\nCreating folder {destinationFolder}.')
 
         os.makedirs(destinationFolder, exist_ok=True)
-        print('Starting download operations.')
+        #print('Starting download operations.')
 
         size = 0
         typeCount = {}
 
+        dlLayout = [
+            [sg.Text(
+                f'Downloading image 0 of {len(totalList)}...', key='__loadText__')],
+            [sg.ProgressBar(len(totalList), orientation='h',
+                            size=(20, 20), key='__ld__')],
+            [sg.Cancel()]
+        ]
+
+        window = sg.Window('Downloading...', dlLayout)
+        loadText = window.Element('__loadText__')
+        progressBar = window.Element('__ld__')
+
         for num, image in enumerate(totalList, start=1):
-            try:
-                img = Image(image)
-                targetFolder = os.path.join(destinationFolder, img.rating)
-                os.makedirs(targetFolder, exist_ok=True)
 
-                img.download(num, targetFolder)
+            img = Image(image)
+            targetFolder = os.path.join(destinationFolder, img.rating)
+            os.makedirs(targetFolder, exist_ok=True)
 
-                size += img.size
+            img.download(num, targetFolder)
 
-                if img.rating not in typeCount.keys():
-                    typeCount[f'{img.rating}'] = 1
-                else:
-                    typeCount[f'{img.rating}'] += 1
+            size += img.size
 
-                loadingBar(len(totalList), num,
-                           message=f'{num}/{len(totalList)} {img.name}')
+            if img.rating not in typeCount.keys():
+                typeCount[f'{img.rating}'] = 1
+            else:
+                typeCount[f'{img.rating}'] += 1
+            # <-----error----->
+            loadText.Update(f'Downloading image {num} of {len(totalList)}...')
+            progressBar.UpdateBar(num)
 
-                sleep(img.time)
+            sleep(img.time)
 
-            except ConnectionError:
-                break
-            except:
-                continue
-
-        print('\nDownloading operations complete.\nCreating metadata file.')
+        #print('\nDownloading operations complete.\nCreating metadata file.')
 
         with open(os.path.join(destinationFolder, 'metadata.txt'), 'w+') as metadata:
             metadata.write(f'''
@@ -91,8 +99,8 @@ class Collection:
 
         time = timeit.default_timer()-dt
 
-        print(
-            f'\nAll operations complete. \nTotal time used: {round(time, 2):,} seconds\n')
+        # print(
+        # f'\nAll operations complete. \nTotal time used: {round(time, 2):,} seconds\n')
 
 
 class Image:
@@ -112,8 +120,8 @@ class Image:
             if x:
                 self.link = x.group()
                 break
-            else:
-                raise Exception(f'Matching link not found in {self.url}')
+        else:
+            raise Exception(f'Matching link not found in {self.url}')
 
         self.image = sess.get(self.link)
         self.size = int(self.image.headers["Content-Length"])
