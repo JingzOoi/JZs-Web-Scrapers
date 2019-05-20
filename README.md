@@ -57,7 +57,7 @@ Parameters:
 
 <hr>
 
-<h2>zeroChan_scraper.py</h2>
+<h2>pixiv_scraper.py</h2>
 <h3>Download images from the image board <a href="https://www.pixiv.net">Pixiv</a>.</h3>
 
 <h3>Additional modules:</h3>
