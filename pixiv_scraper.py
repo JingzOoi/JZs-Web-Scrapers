@@ -47,7 +47,7 @@ class Album:
 
         with open(os.path.join(destinationFolder, 'metadata.txt'), 'w+') as metadata:
             metadata.write(f'''
-            Album URL: {self.url}
+            Album URL: {self.referer}
             Number of images: {len(self.imageList)}
             Total Size: {size:,} bytes
             ''')
