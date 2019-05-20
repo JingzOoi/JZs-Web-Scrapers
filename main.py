@@ -3,11 +3,15 @@ import zeroChan_scraper
 import eduCafe_scraper
 import danbooru_scraper
 import yandere_scraper
+import pixiv_scraper
 
 url = input("URL here: ")
 
 if url is None:
     exit('Invalid Link')
+elif 'pixiv.net' in url:
+    album = pixiv_scraper.Album(url)
+    page_specific = False
 elif 'zerochan.net' in url:
     album = zeroChan_scraper.Collection(url)
     page_specific = True

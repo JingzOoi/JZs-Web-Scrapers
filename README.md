@@ -3,8 +3,10 @@ JZ's Web Scrapers. More like 'scrapers that are useful for my lazy ass'.
 <ol>
     <li><a href='#mainpy'>main.py</a></li>
     <li><a href='#loadingbarpy'>loadingBar.py</a></li>
+    <li><a href='#pixiv_scraperpy'>pixiv_scraper.py</a></li>
     <li><a href='#zerochan_scraperpy'>zeroChan_scraper.py</a></li>
     <li><a href='#danbooru_scraperpy'>danbooru_scraper.py</a></li>
+    <li><a href='#yandere_scraperpy'>yandere_scraper.py</a></li>
     <li><a href='#educomic_scraperpy'>eduComic_scraper.py</a></li>
 </ol>
 
@@ -23,6 +25,7 @@ You should be prompted for a URL. Give any album/collection URL that the scraper
 
 Currently supported sites:
 <ol>
+    <li><a href="https://www.pixiv.net">Pixiv</a></li>
     <li><a href="https://www.zerochan.net">ZeroChan</a></li>
     <li><a href="https://www.danbooru.donmai.us">Danbooru</a></li>
     <li><a href="https://yande.re/post">Yande.re</a></li>
@@ -50,6 +53,17 @@ Parameters:
     <li>currentNumber: the current number</li>
     <li>(optional) message: message to be displayed. Formatted strings recommended.</li>
     <li>(optional) startingNumber: the starting number. For when the loop does not start from 1.</li>
+</ul>
+
+<hr>
+
+<h2>pixiv_scraper.py</h2>
+<h3>Download images from the image board <a href="https://www.pixiv.net">Pixiv</a>.</h3>
+
+<h3>Additional modules:</h3>
+<ul>
+    <li><a href="https://html.python-requests.org/">requests-html</a></li>
+    <li>loadingBar.py (this repo)</li>
 </ul>
 
 <hr>
