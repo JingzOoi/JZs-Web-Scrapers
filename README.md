@@ -58,6 +58,17 @@ Parameters:
 <hr>
 
 <h2>zeroChan_scraper.py</h2>
+<h3>Download images from the image board <a href="https://www.pixiv.net">Pixiv</a>.</h3>
+
+<h3>Additional modules:</h3>
+<ul>
+    <li><a href="https://html.python-requests.org/">requests-html</a></li>
+    <li>loadingBar.py (this repo)</li>
+</ul>
+
+<hr>
+
+<h2>zeroChan_scraper.py</h2>
 <h3>Download images from the image board <a href="https://www.zeroChan.net">ZeroChan</a>.</h3>
 
 <h3>Additional modules:</h3>
