@@ -2,7 +2,6 @@ from requests_html import HTMLSession
 import os
 import timeit
 from time import sleep
-from loadingBar import loadingBar
 
 sess = HTMLSession()
 
@@ -47,7 +46,7 @@ class Album:
             ''')
 
         time = timeit.default_timer()-dt
-        return time, size
+        return time, size, self.imageCount
 
 
 class Image:

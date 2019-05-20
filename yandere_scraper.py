@@ -39,13 +39,10 @@ class Collection:
         dt = timeit.default_timer()
 
         totalList = self.loop(pageNum)
-        print(f'\n{len(totalList)} images found.')
 
         destinationFolder = f'temp\\yandere\\{self.tag}'
-        print(f'\nCreating folder {destinationFolder}.')
 
         os.makedirs(destinationFolder, exist_ok=True)
-        print('Starting download operations.')
 
         size = 0
         typeCount = {}
@@ -80,7 +77,7 @@ class Collection:
 
         time = timeit.default_timer()-dt
 
-        return time, size
+        return time, size, len(totalList)
 
 
 class Image:

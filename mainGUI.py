@@ -82,9 +82,9 @@ while True:
                 f'{album.imageCount} images downloaded.\n{round(time, 2)} seconds used.')
         elif event2 == '_btn2_':
             pageCount = int(sg.PopupGetText('Page count: '))
-            time, size = album.download(pageCount)
+            time, size, imageCount = album.download(pageCount)
             sg.Popup(
-                f'{album.imageCount} images downloaded.\n{round(time, 2)} seconds used.')
+                f'{imageCount} images downloaded.\n{round(time, 2)} seconds used.')
         else:
             break
 

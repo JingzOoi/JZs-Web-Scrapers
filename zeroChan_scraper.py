@@ -13,6 +13,7 @@ class Collection:
         self.imageCount = len(self.imageList)
         self.tag = self.url.split('/')[-1].replace('+', ' ')
         self.name = self.tag
+        self.valid = self.isValid()
 
     def loop(self, pageNum: int = 10):
 
@@ -25,6 +26,11 @@ class Collection:
             totalList.extend(tempList)
 
         return totalList
+
+    def isValid(self):
+        if self.imageCount == 0:
+            return False
+        return True
 
     def download(self, pageNum: int = 10):
 
@@ -55,7 +61,7 @@ class Collection:
 
         time = timeit.default_timer()-dt
 
-        return time, size
+        return time, size, totalList
 
 
 class Image:

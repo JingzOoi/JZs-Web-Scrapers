@@ -1,6 +1,5 @@
 from requests_html import HTMLSession
 import os
-import loadingBar
 import timeit
 from time import sleep
 

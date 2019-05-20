@@ -1,6 +1,5 @@
 from requests_html import HTMLSession
 import os
-from loadingBar import loadingBar
 import timeit
 from time import sleep
 import re
@@ -79,7 +78,7 @@ class Collection:
 
         time = timeit.default_timer()-dt
 
-        return time, size
+        return time, size, len(totalList)
 
 
 class Image:
