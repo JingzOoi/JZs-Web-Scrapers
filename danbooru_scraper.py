@@ -56,15 +56,15 @@ class Collection:
 
         dlLayout = [
             [sg.Text(
-                f'Downloading image 0 of {len(totalList)}...', key='__loadText__')],
+                f'Downloading image 0 of {len(totalList)}...', key='_loadText_')],
             [sg.ProgressBar(len(totalList), orientation='h',
-                            size=(20, 20), key='__ld__')],
+                            size=(20, 20), key='_ld_')],
             [sg.Cancel()]
         ]
 
         window = sg.Window('Downloading...', dlLayout)
-        loadText = window.Element('__loadText__')
-        progressBar = window.Element('__ld__')
+        loadText = window.Element('_loadText_')
+        progressBar = window.Element('_ld_')
 
         for num, image in enumerate(totalList, start=1):
 
