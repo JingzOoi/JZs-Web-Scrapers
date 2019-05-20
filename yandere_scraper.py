@@ -1,6 +1,5 @@
 from requests_html import HTMLSession
 import os
-from loadingBar import loadingBar
 import timeit
 from time import sleep
 import re
@@ -66,14 +65,9 @@ class Collection:
                 else:
                     typeCount[f'{img.rating}'] += 1
 
-                loadingBar(len(totalList), num,
-                           message=f'{num}/{len(totalList)} {img.name}')
-
                 sleep(img.time)
             except:
                 continue
-
-        print('\nDownloading operations complete.\nCreating metadata file.')
 
         with open(os.path.join(destinationFolder, 'metadata.txt'), 'w+') as metadata:
             metadata.write(f'''
@@ -86,8 +80,7 @@ class Collection:
 
         time = timeit.default_timer()-dt
 
-        print(
-            f'\nAll operations complete. \nTotal time used: {round(time, 2):,} seconds\n')
+        return time, size
 
 
 class Image:

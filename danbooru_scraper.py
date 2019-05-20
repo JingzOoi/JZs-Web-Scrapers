@@ -43,28 +43,13 @@ class Collection:
         dt = timeit.default_timer()
 
         totalList = self.loop(pageNum)
-        #print(f'\n{len(totalList)} images found.')
 
         destinationFolder = f'temp\\danbooru\\{self.tag}'
-        #print(f'\nCreating folder {destinationFolder}.')
 
         os.makedirs(destinationFolder, exist_ok=True)
-        #print('Starting download operations.')
 
         size = 0
         typeCount = {}
-
-        dlLayout = [
-            [sg.Text(
-                f'Downloading image 0 of {len(totalList)}...', key='_loadText_')],
-            [sg.ProgressBar(len(totalList), orientation='h',
-                            size=(20, 20), key='_ld_')],
-            [sg.Cancel()]
-        ]
-
-        window = sg.Window('Downloading...', dlLayout)
-        loadText = window.Element('_loadText_')
-        progressBar = window.Element('_ld_')
 
         for num, image in enumerate(totalList, start=1):
 
@@ -80,13 +65,8 @@ class Collection:
                 typeCount[f'{img.rating}'] = 1
             else:
                 typeCount[f'{img.rating}'] += 1
-            # <-----error----->
-            loadText.Update(f'Downloading image {num} of {len(totalList)}...')
-            progressBar.UpdateBar(num)
 
             sleep(img.time)
-
-        #print('\nDownloading operations complete.\nCreating metadata file.')
 
         with open(os.path.join(destinationFolder, 'metadata.txt'), 'w+') as metadata:
             metadata.write(f'''
@@ -99,8 +79,7 @@ class Collection:
 
         time = timeit.default_timer()-dt
 
-        # print(
-        # f'\nAll operations complete. \nTotal time used: {round(time, 2):,} seconds\n')
+        return time, size
 
 
 class Image:

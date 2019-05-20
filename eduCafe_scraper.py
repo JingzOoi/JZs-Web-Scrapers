@@ -1,5 +1,6 @@
 from requests_html import HTMLSession
-import os, loadingBar, timeit
+import os
+import timeit
 from time import sleep
 
 sess = HTMLSession()
@@ -13,20 +14,21 @@ class Album():
             self.url = url
         self.page = sess.get(self.url)
         self.title = self.page.html.find('.x-column.last h3', first=True).text
-        self.start = self.page.html.find('.x-btn.x-btn-flat', first=True).attrs["href"]
-        self.album = [link.find('a', first=True).attrs["href"] for link in sess.get(self.start).html.find('ul.dropdown li')]
+        self.start = self.page.html.find(
+            '.x-btn.x-btn-flat', first=True).attrs["href"]
+        self.album = [link.find('a', first=True).attrs["href"] for link in sess.get(
+            self.start).html.find('ul.dropdown li')]
         self.imageCount = len(self.album)
-        self.tags = [link.text for link in self.page.html.find('.x-column.last p', first=True).find('a')]
+        self.tags = [link.text for link in self.page.html.find(
+            '.x-column.last p', first=True).find('a')]
         self.name = self.title
 
     def download(self):
         dt = timeit.default_timer()
 
         destinationFolder = f'temp\\eduCafe\\{self.title}'
-        print(f'\nCreating folder {destinationFolder}.')
 
         os.makedirs(destinationFolder, exist_ok=True)
-        print('Starting download operations.')
 
         size = 0
 
@@ -39,18 +41,15 @@ class Album():
 
             size += img.size
 
-            loadingBar.loadingBar(self.imageCount, pageNum, message=f'{pageNum}/{self.imageCount} {img.name}')
-
             sleep(img.time)
 
-        print('\nDownloading operations complete.\nCreating metadata file.')
-        
         with open(os.path.join(destinationFolder, 'metadata.txt'), 'w+') as metadata:
-            metadata.write(f'Album URL: {self.url}\nTitle: {self.title}\nNumber of pages: {self.imageCount}\nTags: {self.tags}\nTotal Size: {size:,} bytes')
+            metadata.write(
+                f'Album URL: {self.url}\nTitle: {self.title}\nNumber of pages: {self.imageCount}\nTags: {self.tags}\nTotal Size: {size:,} bytes')
 
         time = timeit.default_timer()-dt
-        
-        print(f'\nAll operations complete. \nTotal time used: {round(time, 2):,} seconds\n')
+
+        return time, size
 
 
 class Image:

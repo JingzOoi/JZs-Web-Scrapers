@@ -9,15 +9,7 @@ sess = HTMLSession()
 
 class Album:
     def __init__(self, url: str):
-
-        if len(url) <= 6:
-            self.url = f'https://nhentai.net/g/{url}/'
-        elif 'nhentai' in url:
-            self.url = url
-        else:
-            print("Invalid link.")
-            exit()
-
+        self.url = url
         self.magicNumber = self.url.split('/')[-2]
         self.page = sess.get(self.url)
         self.valid = self.verifyTag()
@@ -56,10 +48,8 @@ class Album:
     def download(self):
         dt = timeit.default_timer()
         destinationFolder = f'temp\\eduComic\\{self.magicNumber}'
-        print(f'\nCreating folder {destinationFolder}.')
 
         os.makedirs(destinationFolder, exist_ok=True)
-        print('Starting download operations.')
 
         size = 0
 
@@ -70,12 +60,8 @@ class Album:
             with open(os.path.join(destinationFolder, img.name), 'wb') as file:
                 file.write(img.image.content)
             size += img.size
-            loadingBar.loadingBar(
-                self.imageCount, pageNum, message=f'{pageNum}/{self.imageCount} {img.name}')
 
             sleep(img.time)
-
-        print('\nDownloading operations complete.\nCreating metadata file.')
 
         with open(os.path.join(destinationFolder, 'metadata.txt'), 'w+') as metadata:
             metadata.write(
@@ -83,8 +69,7 @@ class Album:
 
         time = timeit.default_timer()-dt
 
-        print(
-            f'\nAll operations complete. \nTotal time used: {round(time, 2):,} seconds\n')
+        return time, size
 
 
 class Image:

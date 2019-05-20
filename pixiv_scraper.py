@@ -28,22 +28,16 @@ class Album:
         dt = timeit.default_timer()
 
         destinationFolder = f'temp\\pixiv\\{self.id}'
-        print(f'\nCreating folder {destinationFolder}.')
 
         os.makedirs(destinationFolder, exist_ok=True)
-        print('Starting download operations.')
 
         size = 0
 
         for num, link in enumerate(self.imageList, start=1):
             img = Image(link, referer=self.referer)
             img.download(destinationFolder=destinationFolder)
-            loadingBar(len(self.imageList), num,
-                       message=f'{num}/{len(self.imageList)} {img.name}')
             size += img.size
             sleep(img.time)
-
-        print('\nDownloading operations complete.\nCreating metadata file.')
 
         with open(os.path.join(destinationFolder, 'metadata.txt'), 'w+') as metadata:
             metadata.write(f'''
@@ -53,9 +47,7 @@ class Album:
             ''')
 
         time = timeit.default_timer()-dt
-
-        print(
-            f'\nAll operations complete. \nTotal time used: {round(time, 2):,} seconds\n')
+        return time, size
 
 
 class Image:
