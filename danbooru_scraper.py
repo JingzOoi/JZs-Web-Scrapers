@@ -75,8 +75,6 @@ class Collection:
 
             except ConnectionError:
                 break
-            except:
-                continue
 
         print('\nDownloading operations complete.\nCreating metadata file.')
 
@@ -112,8 +110,8 @@ class Image:
             if x:
                 self.link = x.group()
                 break
-            else:
-                raise Exception(f'Matching link not found in {self.url}')
+        else:
+            raise Exception(f'Matching link not found in {self.url}')
 
         self.image = sess.get(self.link)
         self.size = int(self.image.headers["Content-Length"])
