@@ -3,6 +3,7 @@ import os
 import timeit
 from time import sleep
 from loadingBar import loadingBar
+import re
 
 sess = HTMLSession()
 
@@ -25,9 +26,11 @@ class Album:
         return f'{self.referer}\n{self.url}\n{self.imageList}'
 
     def isValid(self):
-        if len(self.imageList) == 0:
-            return False
-        return True
+        r = re.compile(
+            r'https://www\.pixiv\.net/member_illust\.php\?mode=medium&illust_id=([0-9]+)')
+        if re.match(r, self.referer) and len(self.imageList) > 0:
+            return True
+        return False
 
     def download(self):
         dt = timeit.default_timer()
