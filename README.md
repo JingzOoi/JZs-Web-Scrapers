@@ -69,6 +69,7 @@ Parameters:
 </ul>
 
 Note: Only one tweet at a time (so 4 max.).
+Also, this module does <i>not</i> work with any other media other than images.
 
 <hr>
 
