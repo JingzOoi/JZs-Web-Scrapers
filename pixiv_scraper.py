@@ -13,11 +13,16 @@ class Album:
         self.id = self.referer.split("=")[-1]
         self.name = self.id
         self.url = f'https://www.pixiv.net/ajax/illust/{self.id}/pages'
-        self.page = sess.get(self.url)
+        self.page = sess.get(self.url, headers={'referer': self.referer})
         self.imageList = [item["urls"]["original"]
                           for item in self.page.json()["body"]]
         self.imageCount = len(self.imageList)
         self.valid = self.isValid()
+        if self.page.json()['error'] == True:
+            raise Exception('ID does not exist, or the album is r18.')
+
+    def __repr__(self):
+        return f'{self.referer}\n{self.url}\n{self.imageList}'
 
     def isValid(self):
         if len(self.imageList) == 0:
