@@ -69,7 +69,7 @@ class Image:
         self.referer = referer
         self.image = sess.get(self.url, headers={'referer': url})
         self.size = int(self.image.headers["Content-Length"])
-        self.name = os.path.basename(url)
+        self.name = os.path.basename(self.url)
         self.time = self.image.elapsed.total_seconds()
 
     def download(self, destinationFolder='temp\\pixiv'):
