@@ -13,8 +13,13 @@ class Album:
         self.referer = url
         self.id = self.referer.split("=")[-1]
         self.name = self.id
-        self.url = f'https://www.pixiv.net/ajax/illust/{self.id}/pages'
-        self.page = sess.get(self.url, headers={'referer': self.referer})
+        try:
+            self.url = f'https://www.pixiv.net/ajax/illust/{self.id}/pages'
+            self.page = sess.get(self.url, headers={'referer': self.referer})
+        except ConnectionError:
+            raise Exception(
+                'Connection severed. Might have been rate limited.')
+
         self.imageList = [item["urls"]["original"]
                           for item in self.page.json()["body"]]
         self.imageCount = len(self.imageList)
@@ -32,10 +37,10 @@ class Album:
             return True
         return False
 
-    def download(self):
+    def download(self, targetFolder='temp\\pixiv'):
         dt = timeit.default_timer()
 
-        destinationFolder = f'temp\\pixiv\\{self.id}'
+        destinationFolder = os.path.join(targetFolder, self.id)
         print(f'\nCreating folder {destinationFolder}.')
 
         os.makedirs(destinationFolder, exist_ok=True)
@@ -78,3 +83,22 @@ class Image:
     def download(self, destinationFolder='temp\\pixiv'):
         with open(os.path.join(destinationFolder, self.name), 'wb') as img:
             img.write(self.image.content)
+
+
+class Artist:
+    def __init__(self, url):
+        self.url = url
+        self.id = self.regex_id()
+        self.all = sess.get(
+            f'https://www.pixiv.net/ajax/user/{self.id}/profile/all', headers={'referer': self.url})
+        self.illusts = list(self.all.json()["body"]["illusts"].keys())
+
+    def regex_id(self):
+        q = re.search(r'(?<=id=)[0-9]+', self.url)
+        if q:
+            return q.group(0)
+
+    def download(self, numStart=0, numEnd=40):
+        for illust in self.illusts[numStart:numEnd]:
+            Album(f'https://www.pixiv.net/member_illust.php?mode=medium&illust_id={illust}').download(
+                targetFolder=os.path.join('temp\\pixiv', f'[Artist] - {self.id}'))
