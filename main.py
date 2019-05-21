@@ -4,12 +4,16 @@ import eduCafe_scraper
 import danbooru_scraper
 import yandere_scraper
 import pixiv_scraper
+import twitter_scraper
 
 url = input("URL here: ")
 
 try:
     if url is None:
         exit('Invalid Link')
+    elif 'twitter.com' in url:
+        album = twitter_scraper.Album(url)
+        page_specific = False
     elif 'pixiv.net' in url:
         album = pixiv_scraper.Album(url)
         page_specific = False
