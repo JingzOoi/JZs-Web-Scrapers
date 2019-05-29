@@ -12,7 +12,7 @@ sess = HTMLSession()
 class Collection:
     def __init__(self, url):
         self.url = url
-        self.tag = self.url.split('=')[-1]
+        self.tag = re.search(r'(?<=tags=)[a-zA-Z0-9+]+', self.url).group(0)
         self.name = self.tag
         self.valid = self.verifyTag()
 
@@ -73,8 +73,8 @@ class Collection:
 
                 sleep(img.time)
 
-            except ConnectionError:
-                break
+            except Exception:
+                continue
 
         print('\nDownloading operations complete.\nCreating metadata file.')
 
