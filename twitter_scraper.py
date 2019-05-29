@@ -13,7 +13,8 @@ class Album:
         self.url = url
         self.page = sess.get(self.url)
         container = self.page.html.find('.tweet.permalink-tweet img')
-        r = re.compile(r'https://pbs\.twimg\.com/media/([a-zA-z0-9-]+)\.jpg')
+        r = re.compile(
+            r'https://pbs\.twimg\.com/media/([a-zA-z0-9-]+)\.[a-z]{3,4}')
         self.imageList = [c.attrs["src"]
                           for c in container if re.match(r, c.attrs["src"])]
         self.imageCount = len(self.imageList)
