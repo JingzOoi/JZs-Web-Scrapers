@@ -13,3 +13,7 @@ temp2.py
 temp.json
 
 dist/mainGUI
+
+geckodriver.log
+
+temp2.json
