@@ -12,7 +12,7 @@ sess = HTMLSession()
 class Collection:
     def __init__(self, url):
         self.url = url
-        self.tag = re.search(r'(?<=tags=)[a-zA-Z0-9+_()]+', self.url).group(0)
+        self.tag = re.search(r'(?<=tags=)[a-zA-Z0-9+_%]+', self.url).group(0)
         self.name = self.tag
         self.valid = self.verifyTag()
 
