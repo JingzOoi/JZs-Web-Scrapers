@@ -1,5 +1,10 @@
 # JZs-Web-Scrapers
 JZ's Web Scrapers. More like 'scrapers that are useful for my lazy ass'.
+
+<hr>
+There's an executable version. 
+Download the repo, extract, then just run the main.exe file in the dist folder.
+<hr>
 <ol>
     <li><a href='#mainpy'>main.py</a></li>
     <li><a href='#loadingbarpy'>loadingBar.py</a></li>
