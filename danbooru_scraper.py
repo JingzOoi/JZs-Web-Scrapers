@@ -12,7 +12,7 @@ sess = HTMLSession()
 class Collection:
     def __init__(self, url):
         self.url = url
-        self.tag = re.search(r'(?<=tags=)[a-zA-Z0-9+_%]+', self.url).group(0)
+        self.tag = re.search(r'(?<=tags=)[a-zA-Z0-9+_%()]+', self.url).group(0)
         self.name = self.tag
         self.valid = self.verifyTag()
 
@@ -35,6 +35,9 @@ class Collection:
             tempList = [post.attrs["href"]
                         for post in page.html.find('#posts-container article a')]
             totalList.extend(tempList)
+            load = f'Page {i}: {len(totalList)} images found.'
+            print(load, end='')
+            print('\b'*len(load), flush=True, end='')
 
         return totalList
 
