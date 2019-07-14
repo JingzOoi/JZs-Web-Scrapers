@@ -12,7 +12,8 @@ sess = HTMLSession()
 class Collection:
     def __init__(self, url):
         self.url = url
-        self.tag = re.search(r'(?<=tags=)[a-zA-Z0-9+_%()]+', self.url).group(0)
+        self.tag = re.search(
+            r'(?<=tags=)[a-zA-Z0-9+_%()~-]+', self.url).group(0)
         self.name = self.tag
         self.valid = self.verifyTag()
 
@@ -107,12 +108,16 @@ class Image:
         self.id = self.info_text[self.info_text.index('ID:')+1]
         self.rating = self.info_text[self.info_text.index('Rating:')+1]
         for a in self.info.links:
-            r = re.compile(
-                r'https://(danbooru|raikou2)\.donmai\.us/([A-Za-z0-9_/+]+)\.([a-z]{3,4})')
-            x = re.search(r, a)
-            if x:
-                self.link = x.group()
-                break
+            if re.match(r'https://(danbooru|raikou2)\.donmai\.us/([A-Za-z0-9_/+]+)\.([a-z]{3,4})', a):
+                if os.path.splitext(a)[-1] == ".zip":
+                    for ac in self.page.html.find('section#image-container', first=True).links:
+                        if re.match(r'https://(danbooru|raikou2)\.donmai\.us/data/sample/([A-Za-z0-9_/+-]+)\.([a-z]{3,4})', ac):
+                            self.link = ac
+                            break
+                    break
+                else:
+                    self.link = a
+                    break
         else:
             raise Exception(f'Matching link not found in {self.url}')
 
