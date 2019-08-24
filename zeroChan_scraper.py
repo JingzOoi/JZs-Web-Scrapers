@@ -11,6 +11,7 @@ class Collection:
         self.imageCount = len(self.imageList)
         self.tag = self.url.split('/')[-1].replace('+',' ')
         self.name = self.tag
+        self.valid = True
 
     def loop(self, pageNum:int = 10):
         

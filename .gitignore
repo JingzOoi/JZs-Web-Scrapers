@@ -17,3 +17,5 @@ dist/mainGUI
 geckodriver.log
 
 temp2.json
+
+compilation.py
