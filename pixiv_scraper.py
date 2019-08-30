@@ -4,6 +4,9 @@ import timeit
 from time import sleep
 from loadingBar import loadingBar
 import re
+from pixiv_compilation import compile_artist
+import random
+import string
 
 sess = HTMLSession()
 
@@ -15,7 +18,8 @@ class Album:
         self.name = self.id
         try:
             self.url = f'https://www.pixiv.net/ajax/illust/{self.id}/pages'
-            self.page = sess.get(self.url, headers={'referer': self.referer})
+            self.page = sess.get(self.url, headers={
+                                 'referer': self.referer, 'x-user-id': '23245428'})
         except ConnectionError:
             raise Exception(
                 'Connection severed. Might have been rate limited.')
@@ -26,6 +30,16 @@ class Album:
         self.valid = self.isValid()
         if self.page.json()['error'] == True:
             raise Exception('ID does not exist, or the album is r18.')
+        self.detail = sess.get(
+            f'https://www.pixiv.net/ajax/user/{random.randint(1000000, 9999999)}/illusts?ids[]={self.id}').json()
+        if self.detail["error"] == True:
+            raise Exception("An error has occured. Try again.")
+        else:
+            self.detailBody = self.detail["body"]
+            self.title = self.detailBody[f"{self.id}"]["illustTitle"]
+            self.artist = self.detailBody[f"{self.id}"]["userName"]
+            self.artistID = self.detailBody[f"{self.id}"]["userId"]
+            self.tags = self.detailBody[f"{self.id}"]["tags"]
 
     def __repr__(self):
         return f'{self.referer}\n{self.url}\n{self.imageList}'
@@ -40,9 +54,9 @@ class Album:
     def download(self, targetFolder='temp\\pixiv'):
         dt = timeit.default_timer()
 
-        destinationFolder = os.path.join(targetFolder, self.id)
+        destinationFolder = os.path.join(
+            targetFolder, f'[{self.artistID}] - {self.artist}\\[{self.id}] - {self.title.translate(str.maketrans("", "", string.punctuation))}')
         print(f'\nCreating folder {destinationFolder}.')
-
         os.makedirs(destinationFolder, exist_ok=True)
         print('Starting download operations.')
 
@@ -57,13 +71,17 @@ class Album:
             sleep(img.time)
 
         print('\nDownloading operations complete.\nCreating metadata file.')
-
-        with open(os.path.join(destinationFolder, 'metadata.txt'), 'w+') as metadata:
-            metadata.write(f'''
-            Album URL: {self.referer}
-            Number of images: {len(self.imageList)}
-            Total Size: {size:,} bytes
-            ''')
+        try:
+            with open(os.path.join(destinationFolder, 'metadata.txt'), 'w+') as metadata:
+                metadata.write(f'''
+                Album URL: {self.referer}
+                Title: {self.title}
+                Number of images: {len(self.imageList)}
+                Total Size: {size:,} bytes
+                Tags: {self.tags}
+                ''')
+        except UnicodeEncodeError:
+            pass
 
         time = timeit.default_timer()-dt
 
@@ -92,13 +110,20 @@ class Artist:
         self.all = sess.get(
             f'https://www.pixiv.net/ajax/user/{self.id}/profile/all', headers={'referer': self.url})
         self.illusts = list(self.all.json()["body"]["illusts"].keys())
+        randomIllust = random.choice(self.illusts)
+        self.name = sess.get(
+            f'https://www.pixiv.net/ajax/user/{random.randint(1000000, 9999999)}/illusts?ids[]={randomIllust}').json()["body"][f"{randomIllust}"]["userName"]
+        self.targetFolder = os.path.join(
+            'temp\\pixiv', f'[{self.id}] - {self.name}')
 
     def regex_id(self):
         q = re.search(r'(?<=id=)[0-9]+', self.url)
         if q:
             return q.group(0)
 
-    def download(self, numStart=0, numEnd=40):
+    def download(self, numStart=0):
+        numEnd = len(self.illusts)
         for illust in self.illusts[numStart:numEnd]:
-            Album(f'https://www.pixiv.net/member_illust.php?mode=medium&illust_id={illust}').download(
-                targetFolder=os.path.join('temp\\pixiv', f'[Artist] - {self.id}'))
+            Album(
+                f'https://www.pixiv.net/member_illust.php?mode=medium&illust_id={illust}').download()
+        compile_artist(self.targetFolder)

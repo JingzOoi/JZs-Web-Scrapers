@@ -1,3 +1,5 @@
+#!python3
+
 import eduComic_scraper
 import zeroChan_scraper
 import eduCafe_scraper
